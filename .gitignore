@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,python,linux,visualstudiocode
 
 #Logs Files
-logs/
+logs/*.txt
 
 ### Django ###
 *.log
