@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{% block title %}ResourceShare{% endblock title %}</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    {% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+    {% endblock stylesheet %}
+    
+    {% block javascript %}
+    <script type="text/js" src="{% static 'js/main.js' %}"></script>
+    {% endblock javascript %}
+  </head>
+  <body>
+    <!-- Navigation bar or other common elements -->
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <!-- Other navigation links -->
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'logout' %}">Logout</a></li> <!-- Logout link -->
+            {% else %}
+            <li><a href="{% url 'login-view' %}">Login</a></li> <!-- Login link -->
+            {% endif %}
+        </ul>
+    </nav>
+    
+    <!-- Content block that varies by page -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Logout confirmation message -->
+    {% if request.GET.logout == '1' %}
+    <div class="logout-message">
+        <p>You have been successfully logged out.</p>
+    </div>
+    {% endif %}
+    <div class="container">
+      <footer></footer>
+    </div>
+  </body>
+</html>

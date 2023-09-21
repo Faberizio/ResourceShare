@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resource Detail</title>
+</head>
+<body>
+    <h1>{{ res.title }}</h1>
+    <p><b>Posted by</b>: {{ user_username }}</p>
+    <p><b>Category</b>: {{ resource_category }}</p>
+    <p><b>Number of Reviews</b>: {{ num_reviews }}</p>
+    
+    {% if average_rating %}
+    <p><b>Average Rating</b>: {{ average_rating }}</p>
+    {% else %}
+    <p><b>Average Rating</b>: None</p>
+    {% endif %}
+    
+    <p><b>Date Posted</b>: {{ date_posted }}</p>
+    
+    <!-- Other resource details here -->
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ block.super }} - Home {% endblock title %}
+
+{% block content %}
+<!--<h1>Welcome to ResourceShare</h1>-->
+<h1>Welcome {{ request.user }}</h1>
+
+<div class="viewed_resource">
+    
+    <h3>Viewed Resources</h3>
+    
+{% if rsession.viewed_resources %}
+    {% for resource_id, resource_title in rsession.viewed_resources %}
+    <a href="{% url 'resource-detail' id=resource_id %}">{{ resource_title }}</a>
+    {% endfor %}
+{% else %}
+    <p>No recently viewed resource</p>
+{% endif %}
+
+</div>
+{% endblock content %}
