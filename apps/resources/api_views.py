@@ -1,6 +1,12 @@
+from rest_framework import viewsets
+from rest_framework.generics import DestroyAPIView,ListAPIView, RetrieveAPIView
 from rest_framework.decorators import api_view
-from .models import Resources
+from .models import Resources, Category
 from rest_framework.response import Response
+from .serializers import ResourceSerializer, CategorySerializer, TagSerializer, CategoryModelSerializer, TagModelSerializer, ResourceModelSerializer
+from . import serializers
+from . import mixins
+
 
 @api_view(['GET'])
 def list_resources(request):
@@ -10,18 +16,49 @@ def list_resources(request):
         .all()
     )
     
-    response = [
-        {
-            "title": resource.title,
-            "link": resource.link,
-            "user": {
-                "id": resource.user_id.id,
-                "username": resource.user_id.username,
-            },
-            "category": resource.cat_id.cat,
-            "tags": [tag.name for tag in resource.tags.all()],
-        }
-        for resource in queryset
-    ]
-
+    # Use the serializer to create the response
+    response = ResourceSerializer(queryset, many=True).data
     return Response(response)
+
+@api_view(['GET'])
+def list_categories(request):
+    queryset = Category.objects.all()
+    response = CategoryModelSerializer(queryset, many=True).data
+    return Response(response)
+
+class ListResources(ListAPIView):
+    queryset = (
+        Resources.objects.select_related("user_id", "cat_id")
+        .prefetch_related("tags")
+        .all()
+    )
+    serializer_class = ResourceModelSerializer
+
+class DetailResource(RetrieveAPIView):
+    lookup_field = "id" 
+    queryset = (
+        Resources.objects.select_related("user_id", "cat_id")
+        .prefetch_related("tags")
+        .all()
+    )
+    serializer_class = ResourceModelSerializer
+
+# ViewSets can permit to perform CRUD
+class ResourceViewSets(viewsets.ModelViewSet):
+    queryset = (
+        Resources.objects.select_related("user_id", "cat_id")
+        .prefetch_related("tags")
+        .all()
+    )
+    serializer_class = ResourceModelSerializer
+    
+class CategoryViewSets(mixins.DenyDeletionOfDefaultCategoryMixin, viewsets.ModelViewSet):
+    queryset = (
+        Category.objects.all()
+    )
+    serializer_class = CategoryModelSerializer
+                                        
+
+class DeleteCategory(DestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = serializers.CategoryModelSerializer
