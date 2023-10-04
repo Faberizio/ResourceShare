@@ -105,24 +105,26 @@ class TestResourcesView(TestCase):
         # check if the status code of response is 302
         self.assertEqual(response.status_code, 200)
         
-    #def test_category_choices_displayed(self):
-     #   response = self.client.get(
-      #      reverse("resource-post"),  # Replace with your view's URL
-       #     HTTP_USER_AGENT="Mozilla/5.0",
-       #     HTTP_CONTENT_TYPE="text/plain",
-       # )
+    '''
+    def test_category_choices_displayed(self):
+        response = self.client.get(
+            reverse("resource-post"),  # Replace with your view's URL
+            HTTP_USER_AGENT="Mozilla/5.0",
+            HTTP_CONTENT_TYPE="text/plain",
+        )
 
         # Check if the response content contains the expected category choices
-       # for choice_key, choice_label in models.CATEGORY_CHOICES:
-       #     self.assertContains(response, choice_label)
+        for choice_key, choice_label in models.CATEGORY_CHOICES:
+            self.assertContains(response, choice_label)
 
-    #def test_tag_choices_displayed(self):
-     #   response = self.client.get(
-      #      reverse("resource-post"),  # Replace with your view's URL
-       #     HTTP_USER_AGENT="Mozilla/5.0",
-       #     HTTP_CONTENT_TYPE="text/plain",
-       # )
+    def test_tag_choices_displayed(self):
+        response = self.client.get(
+            reverse("resource-post"),  # Replace with your view's URL
+            HTTP_USER_AGENT="Mozilla/5.0",
+            HTTP_CONTENT_TYPE="text/plain",
+        )
 
-       # # Check if the response content contains the expected tag choices
-        #for choice_key, choice_label in models.TAG_CHOICES:
-        #    self.assertContains(response, choice_label)
+        # Check if the response content contains the expected tag choices
+        for choice_key, choice_label in models.TAG_CHOICES:
+            self.assertContains(response, choice_label)
+        '''

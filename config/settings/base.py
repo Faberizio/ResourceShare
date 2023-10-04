@@ -18,7 +18,9 @@ CUSTOM_APPS = [
     "apps.resources",
     "apps.core",
 ]
-THIRD_PARTY_APPS = []
+THIRD_PARTY_APPS = [
+    "rest_framework",
+]
 
 INSTALLED_APPS = [*DEFAULT_APPS, *CUSTOM_APPS, *THIRD_PARTY_APPS]
 
@@ -31,7 +33,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.core.middleware.log.simple_logging_middleware",
-   # "apps.core.middleware.logging.ViewExecutionTimeMiddleware",
+    # "apps.core.middleware.logging.ViewExecutionTimeMiddleware",
     #"apps.core.middleware.logging.PrintingNewLineMiddleware",
 ]
 ROOT_URLCONF = "config.urls"
