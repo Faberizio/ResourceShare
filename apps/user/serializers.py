@@ -9,4 +9,4 @@ class UserModelSerializer(serializers.ModelSerializer):
 class UserUpdateModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ("username", "password")
+        exclude = ("username", "password")

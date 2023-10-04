@@ -26,6 +26,12 @@ def list_categories(request):
     response = CategoryModelSerializer(queryset, many=True).data
     return Response(response)
 
+
+class FilterOutAdminResourcesMixin:
+    def get_queryset(self):
+        quesryset = Resources.objects.all()
+        queryset = queryset.exclude(user_id__is_superuser__exact=True)
+        return queryset
 class ListResources(ListAPIView):
     queryset = (
         Resources.objects.select_related("user_id", "cat_id")
@@ -33,6 +39,8 @@ class ListResources(ListAPIView):
         .all()
     )
     serializer_class = ResourceModelSerializer
+    
+    
 
 class DetailResource(RetrieveAPIView):
     lookup_field = "id" 
@@ -52,6 +60,14 @@ class ResourceViewSets(viewsets.ModelViewSet):
     )
     serializer_class = ResourceModelSerializer
     
+class ResourceViewSetsFilterOutAdminResources(FilterOutAdminResourcesMixin,viewsets.ModelViewSet):
+    queryset = (
+        Resources.objects.select_related("user_id", "cat_id")
+        .prefetch_related("tags")
+        .all()
+    )
+    serializer_class = ResourceModelSerializer
+    
 class CategoryViewSets(mixins.DenyDeletionOfDefaultCategoryMixin, viewsets.ModelViewSet):
     queryset = (
         Category.objects.all()
@@ -59,6 +75,9 @@ class CategoryViewSets(mixins.DenyDeletionOfDefaultCategoryMixin, viewsets.Model
     serializer_class = CategoryModelSerializer
                                         
 
-class DeleteCategory(DestroyAPIView):
+class DeleteCategory(mixins.DenyDeletionOfDefaultCategoryMixin, DestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = serializers.CategoryModelSerializer
+    
+
+        

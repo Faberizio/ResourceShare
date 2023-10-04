@@ -17,3 +17,6 @@ class DenyDeletionOfDefaultCategoryMixin:
                     f"Not allowed to delete category with id {pk}"
                 )
         return queryset # always returns queryset
+    
+    def destroy(self, request, *args, **kwargs):
+        ...
