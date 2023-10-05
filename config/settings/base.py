@@ -55,6 +55,12 @@ TEMPLATES = [
     },
 ]
 
+# AUTHENTICATION
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHEENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ]
+}
 WSGI_APPLICATION = "config.wsgi.application"
 
 AUTH_PASSWORD_VALIDATORS = [

@@ -5,6 +5,7 @@ from apps.user import api_views  # Import api_views here
 
 api_urlpatterns = [
     path('api/v1/login', api_views.UserLogin.as_view(), name='user-login-class'),
+    path("api/v1/profile/", api_views.UserProfile.as_view(), name="user-profile-class"),
 ]
 
 urlpatterns = [

@@ -26,3 +26,7 @@ class UserLogin(APIView):
             {"token": token.key},
             status=status.HTTP_201_CREATED
         )
+
+class UserProfile(APIView):
+    def get(self, request):
+        pass

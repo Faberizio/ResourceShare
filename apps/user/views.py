@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from .models import User  # Import your User model
 from django.contrib.auth.decorators import login_required  # Import login_required decorator
 from django.contrib.auth.views import LogoutView
+from django.http import HttpResponse
 
 # Create your views here.
 def user_list(request):

@@ -13,7 +13,7 @@ from . import mixins
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
+#@authentication_classes([TokenAuthentication])
 def list_resources(request):
     queryset = (
         Resources.objects.select_related("user_id", "cat_id")
