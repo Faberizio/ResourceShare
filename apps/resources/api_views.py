@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Resources, Category
 from .serializers import serializers
 from .serializers.serializers import ResourceModelSerializer
-
+from . import permissions
 from . import mixins
 
 
@@ -81,7 +81,8 @@ class DetailResource(RetrieveAPIView):
 
 
 # ViewSets can permit us to perform the CRUD operations in one class based view.
-class ResourceViewSets(viewsets.ModelViewSet):  # <model>ViewSets
+class ResourceViewSets(viewsets.ModelViewSet):
+    permission_classes = (permissions.AuthorSuperOrReadOnly,)
     queryset = (
         Resources.objects.select_related("user_id", "cat_id")
         .prefetch_related("tags")
@@ -93,6 +94,7 @@ class ResourceViewSets(viewsets.ModelViewSet):  # <model>ViewSets
 class CategoryViewSets(
     mixins.DenyDeletionOfDefaultCategoryMixin, viewsets.ModelViewSet
 ):
+    
     queryset = Category.objects.all()
     serializer_class = serializers.CategoryModelSerializer
 

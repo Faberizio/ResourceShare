@@ -1,20 +1,19 @@
+from typing import Optional
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
-from .models import User  # Import your User model
-from django.contrib.auth.decorators import login_required  # Import login_required decorator
-from django.contrib.auth.views import LogoutView
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from .models import User
+from rest_framework.generics import UpdateAPIView
+from . import serializers
+
 
 # Create your views here.
 def user_list(request):
     users = User.objects.all()
 
-    context = {
-        'users': users,
-    }
-
-    return render(request, 'user/user_list.html', context)
+    context = {"users": users}
+    return render(request, "user/user_list.html", context)
 
 
 def login_view(request):
@@ -23,44 +22,52 @@ def login_view(request):
     # Unbound state of our form
     form = AuthenticationForm()
 
-    if request.method == 'POST':
+    if request.method == "POST":
         # Bound state of our form
         form = AuthenticationForm(data=request.POST)
 
         # Validate the data
         if form.is_valid():
-            username = form.cleaned_data.get('username')  # Corrected typo
-            password = form.cleaned_data.get('password')  # Corrected typo
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
 
             # Authenticate the user
-            user = authenticate(
-                request=request,  # Pass the request object
+            user: Optional[User] = authenticate(
                 username=username,
                 password=password,
             )
-
             # Check if user was authenticated
             if user is not None:
-                # Use the session to keep the authenticated user id
+                # use the session to keep the authenticated user's id.
                 login(request, user)
+                # When we login, the session will store the user id
+                # The Authentication middleware is going to use that id
+                # and fetch the user from the database and store it in the
+                # request.user object
 
-                # Redirect the user to their profile page
-                return redirect('profile')  # Corrected the redirect function
-
-            # TODO: If the user is not authenticated, you can handle it here, e.g., show an error message.
-            error_message = 'Invalid username or password.'
+                # Redirect the user to his profile page
+                # The url path name
+                return redirect("profile")
+            # TODO: If user is not authenticated, what should you do?
 
         else:
-            # User's data is not valid. Display an error message.
-            error_message = 'Sorry, something went wrong. Try again later.'
+            # User's data is not valid. So, set an error message to be displayed
+            error_message = "Sorry, something went wrong. Try again"
 
-    context = {'form': form, "error_message": error_message}
+    context = {"form": form, "error_message": error_message}
 
     return render(request, "user/login.html", context)
 
 
-@login_required  # Protect the profile view with login_required decorator
+@login_required
 def profile(request):
-    return render(request, 'user/profile.html')
+    return render(request, "user/profile.html")
+
+
+class UpdateUser(UpdateAPIView):
+    lookup_field = "id"
+    queryset = User.objects.all()
+    serializer_class = serializers.UserModelSerializer
+
 
 

@@ -12,6 +12,7 @@ urlpatterns = [
     path("user_list/", views.user_list, name="user_list"),
     path('login/', views.login_view, name="login-view"),
     path("profile/", views.profile, name="profile"),
+    path("update/<int:id>/", views.UpdateUser.as_view(), name="update-user"),
     path('logout/', LogoutView.as_view(), name='logout'),
     *api_urlpatterns,
 ]
