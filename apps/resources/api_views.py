@@ -1,8 +1,9 @@
 from rest_framework import viewsets
-from rest_framework.authentication import BasicAuthentication
+from rest_framework.authentication import BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import DestroyAPIView,ListAPIView, RetrieveAPIView
 from rest_framework.decorators import api_view
+from rest_framework.decorators import authentication_classes, permission_classes
 from .models import Resources, Category
 from rest_framework.response import Response
 from .serializers import ResourceSerializer, CategorySerializer, TagSerializer, CategoryModelSerializer, TagModelSerializer, ResourceModelSerializer
@@ -11,6 +12,8 @@ from . import mixins
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
 def list_resources(request):
     queryset = (
         Resources.objects.select_related("user_id", "cat_id")
