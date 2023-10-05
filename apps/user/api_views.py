@@ -6,6 +6,7 @@ from rest_framework.views import APIView  # Turn our class to API view
 from rest_framework.response import Response  # Return JSON
 from rest_framework import status  # Set status code
 from rest_framework.authtoken.models import Token  # generate token
+from rest_framework.permissions import IsAuthenticated
 from . import models
 from . import serializers
 
@@ -34,6 +35,7 @@ class UserLogin(APIView):
 
 
 class UserProfile(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request):
         user = models.User.objects.prefetch_related("resources_set").get(
             id=request.user.id
