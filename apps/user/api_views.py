@@ -29,4 +29,5 @@ class UserLogin(APIView):
 
 class UserProfile(APIView):
     def get(self, request):
-        pass
+        user = models.User.objects.prefetch_related('resources_set').get(id=request.user.id)
+        

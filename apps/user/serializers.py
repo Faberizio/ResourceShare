@@ -4,7 +4,7 @@ from . import models
 class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        exclude = ("password",)
+        fields = "__all__"
 
 class UserUpdateModelSerializer(serializers.ModelSerializer):
     class Meta:
