@@ -1,33 +1,42 @@
 from typing import Optional
+
 from django.contrib.auth import authenticate
-from django.contrib.auth import models  # Import models from Django's auth
-from rest_framework.views import APIView  # Corrected import
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.authtoken.models import Token
+
+from rest_framework.views import APIView  # Turn our class to API view
+from rest_framework.response import Response  # Return JSON
+from rest_framework import status  # Set status code
+from rest_framework.authtoken.models import Token  # generate token
+from . import models
+from . import serializers
+
+
 
 class UserLogin(APIView):
     def post(self, request):
-        password = request.data.get('password')
-        username = request.data.get('username')
-        
+        # get credentials
+        password = request.data.get("password")  # request.data is a dict
+        username = request.data.get("username")
+
+        # Authenticate the user.
         user: Optional[models.User] = authenticate(
             username=username,
             password=password,
         )
-        
         if not user:
             return Response(
-                {"error": "Invalid username or password"},
-                status=status.HTTP_404_NOT_FOUND
+                {"error": "Password or Username incorrect"},
+                status=status.HTTP_404_NOT_FOUND,
             )
+        # Create the token
         token, _ = Token.objects.get_or_create(user=user)
-        return Response(
-            {"token": token.key},
-            status=status.HTTP_201_CREATED
-        )
+
+        return Response({"token": token.key}, status=status.HTTP_201_CREATED)
+
 
 class UserProfile(APIView):
     def get(self, request):
-        user = models.User.objects.prefetch_related('resources_set').get(id=request.user.id)
-        
+        user = models.User.objects.prefetch_related("resources_set").get(
+            id=request.user.id
+        )
+        response = serializers.UserProfileModelSerializer(user)
+        return Response(response.data)
