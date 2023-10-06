@@ -24,4 +24,10 @@ class DenyDeletionOfDefaultCategoryMixin:
 class filterByCategoryMixin:
     def get_queryset(self):
         queryset = super().get_queryset()
+        query_params = self.request.query_params
         
+        category = query_params.get('cat')
+        if category:
+            return queryset.filter(cat_id__cat__iexact=category)
+        return queryset
+    
