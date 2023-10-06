@@ -59,7 +59,7 @@ def list_category(request):
     return Response(response.data)
 
 
-class ListResource(ListAPIView):
+class ListResource(mixins.filterByCategoryMixin,ListAPIView):
     authentication_classes = (BasicAuthentication,)
     permission_classes = (IsAuthenticated,)
     queryset = (

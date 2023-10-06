@@ -20,3 +20,8 @@ class DenyDeletionOfDefaultCategoryMixin:
     
     def destroy(self, request, *args, **kwargs):
         ...
+        
+class filterByCategoryMixin:
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
